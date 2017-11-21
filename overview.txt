@@ -1,0 +1,232 @@
+The following repositories are for several projects for python
+  software development and support under IGPP/UCLA Chris Russell Group
+
+History:
+/soft/ - source code and binaries for IGPP UCLA software
+libIGPP.a -> main flatfile modules for C and Fortran, for solaris operating system
+    location /soft/libIGPP; /usr8/leel/flatgnu/libIGPP
+    convert  -> convert data from ASCII, EBCDIC, DEC VAX, IBM/360 and HP1000
+   -ctime    -> fortran version for time_igpp
+   +ff_igpp  -> flatfile creator/reader
+   +parm     -> text driven user interface, parameter file support
+                for both fortran and C, modules for input of various
+                data types {chr,l,i,r4,r8,t8} either a single item
+                or as an array (very buggy)
+   -flat     -> fortran creator/reader
+    ifbrk    -> fortran signal checker
+    igppfort -> fortran modules from the original HP
+    igpplib  -> C code running FORTRAN commands
+    include  -> include file for flatfile datatypes and function prototypes
+    jtlib    -> fortran for ISEE data support
+   +pickfile  -> text file picker
+    plotlib   -> allows piping from one program into another, probably by
+                 fl
+    pvolib    -> computes orbits for pvo
+    tapelib   -> tape driver reader
+   +template  -> graphical library for various devices that no longer
+                 exist, but for postscript and X11
+   +time_igpp -> flatfile time routines
+   +utc2at    -> leapseconds handler
+    greg_time -> get gregorian date or days
+
++ will have a python equivalent
+
+flatfile utilities
+located under /soft/flatutils; or /usr8/leel/flatgnu/s.ffsoft
+   +ascii2ff -> convert ascii files to flatfiles, limited time formats
+   +ff2ascii -> convert flatfiles to ascii, used by webserver
+   +ffavg    -> averages flatfile data, used by webserver
+    ffcalc   -> create new flatfiles as a function of columns from another flatfile
+    ffclean  -> have no idea
+    ffhedit  -> edit the flatfile header, basically vi
+   +ffmerge  -> merges flatfiles either horizontally or vertically, used by Webserver
+   +ffmnmx   -> calculate the min and max of a flatfile columns, used by webserver
+    ffpad    -> pads additional columns to a flatfile, used by webserver
+    ffsort   -> sorts records by time
+    fftrans  -> coordinate transformation, cannot find source code
+    ffview   -> curses program display flatfile contains (Hannes)
+   +fplot    -> template based plotting program, uses config for input
+   +fl       -> flatfile lister, display, edit and plot flatfile data
+ 
++ should have a python equilvalent
+
+sun gui/graphics programs
+  template based
+    fl -> flatfile lister, drives fplot
+    tanal -> trajectory analysis, plots flatfiles with
+             trajectory data
+  openlook based
+   +bx    -> bfield analyis (aka magPy)
+   +mx    -> spectral analysis program for flatfiles
+             It uses the same panel in magPy
+   -xplanet -> spacecraft trajectory display using spicelib
+  motif/openlook based
+   *xsolar  -> space physics tutorial
+   *xspace  -> space physics tutorial
+  X something
+    mapstev
+    ml
+    trans
+    waves
+
+* already translated to javascript 
++ needs to translated to python
+- needs to translated to python but waiting for spice lib support
+  
+Python packages
+  ffPy -> ff_igpp, utc2at, time_igpp
+       still work in progress
+       core python flatfile support
+       read/writes flatfiles and converts
+         supported time EPOCHs 
+       TBD: (To Be Done)
+         allow for auto leapsecond upgrades regardless
+           of system privileges and os
+         reset time precision from milleseconds 
+         Reading time as (date)
+           YYYY MM DD
+           YYYY DOY
+           YYYY DOY MM DD (currently supported)
+         Use the new time package
+        Interface has traces of the old software
+          needs to review again to be more pythonized
+          the FF_INFO, FF_DESC, FF_PARAM should be
+          hidden as well of the HID and DID
+ 
+  UIParmPy -> parm
+      still work in progress, very complicated
+      text User Interface, 
+      supports user interface for flatfiles utilities
+      can be extended to GUIs interface support
+      datatypes are string, integer, float, UTC, path, file,
+      FFile, FFileNew, flag, enum, radioSelect (unique),
+      checkSelect (multiple), boolean, and iList.
+      Features:
+       scalable
+       keyword, prompt, value, datatype, description, format
+          to be defined by a dictionary.
+       checks string input is reasonable for the data type
+       converts the string to value
+       check value reasonable for the datatype like a range
+       allows user defined check overides
+       allows validation in relation to other parameters values
+       has batch mode
+       usage is defined by a help file
+       input can be from
+         command line option
+         sequential prompting
+         parameter file
+         or combination of all three
+
+  graph -> template
+      PyQt4 contains the graphics primitives used in template
+        ie drawLine, drawString, fillPolygon, viewPort
+      This is a suite of plotting components
+          frame, axis, labeling and traces
+      classes : grid, axis and plot
+      Need to make abstract class,
+        child classes, Horizontal, vertical and time axii
+      Grid :  (needs some refactoring)
+        one plot per graphic item
+        multiple plots per graphic item,
+          evenly spaced (graph_Grid)
+   
+     
+New:
+  sysUtilities -> python dealing with system dependencies
+                 and the python environment
+                 sys.platform, os.path
+                 resource locations
+                 This needs to be improved
+                 Uses getenv, which needs to be avoided
+  QtUtilities  -> simple Qt dependent modules which
+                  could be used else where
+          DIALOG, WARNING: dialog popups
+          class UTCQDate:
+              Used to convert from PyQt time unit (QDateTime)
+              a string in UTC
+          at this time, datetime is python has been improved
+              so this may be obsolete
+
+Once this is stablized in magPy:
+
+  The various panels from magPy can be repurposed to other
+GUI projects.
+  focus, spectra,data, header, hodogram
+    but the interface needs to be cleaned up instead of
+    magPy specific. perhaps create a general data class
+    class NewPanel(dataBundle, ....)
+        def init
+        def checkDataBundle
+        where dataBundle contains all the needed data
+          to generate the panel
+          dataBundle attributes
+            values
+            functions 
+            calling funtions or widgets etc
+
+
+GitHub
+   Need to push/pull components under the repository
+ 
+
+various usage based python knowledge
+   1. maintaining the core python code
+      normally no one looks at the source code
+      any thing found under libIGPP.a
+      Once those components are stable, they should
+          be installed in to the python site-packages
+   2. python programmers
+        Use the python code for reading/writing 
+        documentations should be via pydocs
+        Example:
+        whoever develops flatfile utilities 
+        whoever want to read/write flatfiles in python
+        New -> used in the web data server
+          to avoid a system exec call
+   3. general users (non python programmers)
+       use the flatfile utilities
+   2
+
+packaging (aka wheels) should be a function of dependencies
+   to minimized number installs of other softare
+various levels
+   pure python without third party imports, ie only modules
+     which are easy to install 
+     example genYMagBounds, (aka GetTicks )
+   python modules with third party import like numpy, scipy
+     modules which are really extensions
+     ffPy
+   python modules with PyQt dependencies, holy buckets PyQt is
+     a pain!
+     PyQt is now to version 5. This will prevent other
+     modules from being messed up when or if we
+     decide to upgrade
+     Not all flatfile software requires graphics
+   
+
+As far as various applications and repositories:
+   There should be a TOA (Table of Activity)
+     A list of package dependancies 3rd party or ours
+     A list of packages that are dependent on
+
+   say for ff2ascii
+     it requires UIParmPy, ffPy 
+     under UIParmPy there should be a list of program
+       where it is used and a timestamp where and the last version
+       when UIParmPy and ffPy works
+      Updated: vxx.xx 2017 Nov 28
+      Dependencies:
+      UIParmPy vxx.xx verified 2017 Sep 10
+      ffPy     vxx.xx verified 2017 Dec 01
+      From this we know that which version Of UIParmPy we were using
+      And if we do a complete pull, we know there could be a problem
+        with ffPy, that may need our attention
+
+      At the UIParmPy repository
+      Updated: vxx.xx 2017 Sep 10
+      Usage
+        ff2ascii: vxx.xx 2017 Nov 28
+        ff2align: vxx.xx 2017 Apr 28  etc.
+      basically a cross reference between the modules and
+       
